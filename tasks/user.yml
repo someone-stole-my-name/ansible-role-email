@@ -1,0 +1,60 @@
+---
+
+- name: Add user (system)
+  user:
+    name: "{{ item.name }}"
+    comment: "Ansible Managed"
+    shell: /bin/bash
+  register: _user
+  tags: [ 'users' ]
+
+- name: Add alias (system)
+  lineinfile:
+    path: /etc/email-addresses
+    create: yes
+    line: "{{ item.name }}:{{ item.name }}@{{ email_domain_zone }}"
+  tags: [ 'users' ]
+
+- name: Check if user exists (exim)
+  shell: grep -q '{{ item.name }}:' /etc/exim4/passwd
+  failed_when: false
+  changed_when: false
+  register: _user_exists_exim
+  tags: [ 'users' ]
+
+- name: Check if user exists (dovecot)
+  shell: grep -q '{{ item.name }}:' /etc/dovecot/users
+  failed_when: false
+  changed_when: false
+  register: _user_exists_dovecot
+  tags: [ 'users' ]
+
+- name: Hash password (exim)
+  no_log: yes
+  shell: mkpasswd {{ item.password }}
+  when: _user_exists_exim.rc == 1
+  register: _password_exim
+  tags: [ 'users' ]
+
+- name: Hash password (dovecot)
+  no_log: yes
+  shell: doveadm pw -p {{ item.password }}
+  when: _user_exists_dovecot.rc == 1
+  register: _password_dovecot
+  tags: [ 'users' ]
+
+- name: Add user (exim)
+  lineinfile:
+    path: /etc/exim4/passwd
+    create: yes
+    line: "{{ item.name }}:{{ _password_exim.stdout }}"
+  when: _user_exists_exim.rc == 1
+  tags: [ 'users' ]
+
+- name: Add user (dovecot)
+  lineinfile:
+    path: /etc/dovecot/users
+    create: yes
+    line: "{{ item.name }}:{{ _password_dovecot.stdout }}:{{ _user.uid }}:{{ _user.group }}::/home/{{ item.name }}:/bin/bash:userdb_mail=maildir:/home/{{ item.name }}/Maildir"
+  when: _user_exists_dovecot.rc == 1
+  tags: [ 'users' ]

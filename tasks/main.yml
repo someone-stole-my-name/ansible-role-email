@@ -1,0 +1,17 @@
+---
+
+- include: base.yml
+
+- include: dkim.yml
+
+- include: "{{ email_domain_ns_provider }}.yml"
+
+- include: certbot.yml
+
+- include: exim.yml
+
+- include: user.yml
+  no_log: yes
+  loop: "{{ email_users }}"
+
+- include: dovecot.yml

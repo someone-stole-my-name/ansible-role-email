@@ -1,0 +1,77 @@
+---
+
+- name: Enable exim authentication
+  blockinfile:
+    path: /etc/exim4/exim4.conf.template
+    insertbefore: "# login_server:"
+    marker_begin: BEGIN LOGIN SERVER
+    marker_end: END LOGIN SERVER
+    block: |
+      login_server:
+        driver = plaintext
+        public_name = LOGIN
+        server_prompts = "Username:: : Password::"
+        server_condition = "${if crypteq{$auth2}{${extract{1}{:}{${lookup{$auth1}lsearch{CONFDIR/passwd}{$value}{*:*}}}}}{1}{0}}"
+        server_set_id = $auth1
+        .ifndef AUTH_SERVER_ALLOW_NOTLS_PASSWORDS
+        server_advertise_condition = ${if eq{$tls_in_cipher}{}{}{*}}
+        .endif
+  notify:
+    - update exim configuration
+    - restart exim
+
+- name: Copy custom exim template
+  blockinfile:
+    path: /etc/exim4/exim4.conf.template
+    insertafter: MAIN CONFIGURATION SETTINGS
+    marker_begin: BEGIN CUSTOM CONF
+    marker_end: END CUSTOM CONF
+    block: |
+        smtp_banner = mail.{{ email_domain_zone }} $tod_full
+        MAIN_HARDCODE_PRIMARY_HOSTNAME = mail.{{ email_domain_zone }}
+        DKIM_DOMAIN={{ email_domain_zone }}
+        DKIM_SELECTOR=mail
+        DKIM_PRIVATE_KEY=/etc/exim4/dkim.key
+        MAIN_TLS_ENABLE = true
+        MAIN_TLS_CERTIFICATE = /etc/letsencrypt/live/mail.{{ email_domain_zone }}/fullchain.pem
+        MAIN_TLS_PRIVATEKEY = /etc/letsencrypt/live/mail.{{ email_domain_zone }}/privkey.pem
+        CHECK_RCPT_SPF = true
+        CHECK_RCPT_IP_DNSBLS = zen.spamhaus.org
+        tls_on_connect_ports = 465
+  notify:
+    - update exim configuration
+    - restart exim
+
+- name: Write exim configuration
+  copy:
+    dest: "{{ item.file }}"
+    content: "{{ item.content }}"
+  loop:
+    - file: /etc/mailname
+      content: "{{ email_domain_zone }}"
+    - file: /etc/exim4/update-exim4.conf.conf
+      content: |
+        dc_eximconfig_configtype='internet'
+        dc_other_hostnames='{{ email_domain_zone }}'
+        dc_local_interfaces=''
+        dc_readhost=''
+        dc_relay_domains=''
+        dc_minimaldns='false'
+        dc_relay_nets=''
+        dc_smarthost=''
+        CFILEMODE='644'
+        dc_use_split_config='false'
+        dc_hide_mailname=''
+        dc_mailname_in_oh='true'
+        dc_localdelivery='maildir_home'
+  notify:
+    - update exim configuration
+    - restart exim
+
+- name: Modify SMTP listener
+  lineinfile:
+    path: /etc/default/exim4
+    regexp: SMTPLISTENEROPTIONS=
+    line: SMTPLISTENEROPTIONS='-oX 25:587:10025 -oP /run/exim4/exim.pid'
+  notify:
+    - restart exim

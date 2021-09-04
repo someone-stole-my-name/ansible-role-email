@@ -1,0 +1,38 @@
+---
+
+- name: Copy dovecot configuration
+  lineinfile:
+    line: "{{ item.line }}"
+    regexp: "{{ item.regexp }}"
+    path: "{{ item.path }}"
+    backrefs: yes
+  notify: [ 'restart dovecot' ]
+  loop:
+
+    - path: "/etc/dovecot/conf.d/10-ssl.conf"
+      regexp: "^ssl_cert = <"
+      line: "ssl_cert = </etc/letsencrypt/live/mail.{{ email_domain_zone }}/fullchain.pem"
+
+    - path: "/etc/dovecot/conf.d/10-ssl.conf"
+      regexp: "^ssl_key = <"
+      line: "ssl_key = </etc/letsencrypt/live/mail.{{ email_domain_zone }}/privkey.pem"
+
+    - path: "/etc/dovecot/conf.d/10-auth.conf"
+      regexp: "^auth_mechanisms ="
+      line: "auth_mechanisms = plain login"
+
+    - path: "/etc/dovecot/conf.d/10-auth.conf"
+      regexp: "^#!include auth-passwdfile.conf.ext"
+      line: "!include auth-passwdfile.conf.ext"
+
+    - path: "/etc/dovecot/conf.d/10-auth.conf"
+      regexp: "^!include auth-system.conf.ext"
+      line: "#!include auth-system.conf.ext"
+
+    - path: /etc/dovecot/conf.d/10-master.conf
+      regexp: "^  unix_listener auth-userdb"
+      line: "unix_listener auth-userdb {\n    mode = 0660\n    user = mail"
+
+    - path: /etc/dovecot/conf.d/10-mail.conf
+      regexp: "^mail_location ="
+      line: "mail_location = maildir:~/Maildir"

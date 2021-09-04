@@ -1,0 +1,20 @@
+---
+
+- include_role:
+    name: geerlingguy.certbot
+
+- name: Set group on certbot directories
+  file:
+    path: "{{ item }}"
+    group: mailers
+    mode: g+x
+  loop:
+    - /etc/letsencrypt/archive
+    - /etc/letsencrypt/live
+    - /etc/letsencrypt/live/mail.{{ email_domain_zone }}
+    - /etc/letsencrypt/archive/mail.{{ email_domain_zone }}
+
+- name: Allow group to read privkey
+  file:
+    path: "/etc/letsencrypt/archive/mail.{{ email_domain_zone }}/privkey1.pem"
+    mode: g+r

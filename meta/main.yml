@@ -1,0 +1,17 @@
+galaxy_info:
+  author: Christian Segundo
+  license: BSD-3-Clause
+  min_ansible_version: 2.11
+  platforms:
+    - name: Debian
+      versions:
+        - 10
+  galaxy_tags:
+    - email
+    - exim
+    - dovecot
+    - imap
+    - smtp
+collections:
+  - community.general
+  - community.crypto

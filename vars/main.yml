@@ -1,0 +1,15 @@
+---
+certbot_create_standalone_stop_services: []
+certbot_create_if_missing: yes
+certbot_certs:
+  - email: "{{ letsencrypt_email | default('root@' + email_domain_zone ) }}"
+    domains:
+      - mail.{{ email_domain_zone }}
+      - smtp.{{ email_domain_zone }}
+      - imap.{{ email_domain_zone }}
+
+mail_base_pkgs:
+  - python-openssl
+  - exim4
+  - whois
+  - dovecot-imapd

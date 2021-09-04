@@ -1,0 +1,17 @@
+---
+
+- name: Install base packages
+  apt:
+    name: "{{ mail_base_pkgs }}"
+    install_recommends: no
+    update_cache: yes
+
+- name: Create mailers group
+  group:
+    name: mailers
+
+- name: Add Debian-exim to mailers group
+  user:
+    name: Debian-exim
+    groups: [ 'mailers' ]
+    append: yes

@@ -1,0 +1,13 @@
+---
+- name: update exim configuration
+  shell: update-exim4.conf
+
+- name: restart exim
+  systemd:
+    name: exim4
+    state: restarted
+
+- name: restart dovecot
+  systemd:
+    name: dovecot
+    state: restarted

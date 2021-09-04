@@ -1,0 +1,37 @@
+---
+argument_specs:
+  main:
+    options:
+      email_domain_zone:
+        type: "str"
+        required: yes
+      email_domain_ns_provider:
+        type: "str"
+        choices: [ 'cloudflare' ]
+      email_users:
+        type: "list"
+        options:
+          name:
+            type: "str"
+            required: yes
+          password:
+            type: "str"
+            required: yes
+  cloudflare:
+    options:
+      email_dkim_certificate:
+        type: "str"
+        required: yes
+      email_server_external_ip:
+        type: "str"
+        required: yes
+      cloudflare:
+        type: "dict"
+        required: yes
+        options:
+          email:
+            type: "str"
+            required: yes
+          api_key:
+            type: "str"
+            required: yes

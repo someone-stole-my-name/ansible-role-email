@@ -1,0 +1,22 @@
+---
+
+- name: Create DKIM key
+  openssl_privatekey:
+    path: /etc/exim4/dkim.key
+    size: 2048
+    group: Debian-exim
+    owner: Debian-exim
+
+- name: Create DKIM public key
+  openssl_publickey:
+    path: /etc/exim4/dkim.pem
+    privatekey_path: /etc/exim4/dkim.key
+    group: Debian-exim
+    owner: Debian-exim
+
+- shell: cat /etc/exim4/dkim.pem
+  register: _dkim_crt
+  changed_when: false
+
+- set_fact:
+    email_dkim_certificate: "{{ _dkim_crt.stdout_lines[1:-1] | join('') }}"

@@ -1,0 +1,19 @@
+---
+
+- name: Create fake certbot directories
+  file:
+    path: "{{ item }}"
+    group: mailers
+    owner: root
+    mode: g+x
+    state: directory
+  loop:
+    - /etc/letsencrypt/archive
+    - /etc/letsencrypt/live
+    - /etc/letsencrypt/live/mail.{{ email_domain_zone }}
+    - /etc/letsencrypt/archive/mail.{{ email_domain_zone }}
+
+# - name: Allow group to read privkey
+#   file:
+#     path: "/etc/letsencrypt/archive/mail.{{ email_domain_zone }}/privkey1.pem"
+#     mode: g+r

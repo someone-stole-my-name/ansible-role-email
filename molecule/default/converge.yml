@@ -1,0 +1,12 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    email_server_external_ip: "{{ ansible_default_ipv4.address }}"
+    email_ci: true
+    email_domain_zone: molecule.local
+    email_users:
+      - name: molecule
+        password: molecule
+  roles:
+    - email

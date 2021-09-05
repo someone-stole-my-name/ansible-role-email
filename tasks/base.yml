@@ -5,6 +5,8 @@
     name: "{{ mail_base_pkgs }}"
     install_recommends: no
     update_cache: yes
+  notify:
+    - start services
 
 - name: Create mailers group
   group:

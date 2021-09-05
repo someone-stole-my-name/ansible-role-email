@@ -1,0 +1,10 @@
+- name: Mail records
+  debug: var=item
+  loop:
+    - { record: mail, value: "{{ email_server_external_ip }}", type: A }
+    - { record: smtp, value: "mail.{{ email_domain_zone }}", type: CNAME }
+    - { record: imap, value: "mail.{{ email_domain_zone }}", type: CNAME }
+    - { record: "{{ email_domain_zone }}", value: "v=spf1 ip4:{{ email_server_external_ip }} -all", type: TXT }
+    - { record: "mail._domainkey", value: "k=rsa; t=s; p={{ email_dkim_certificate }}", type: TXT }
+    - { record: "{{ email_domain_zone }}", value: "mail.{{ email_domain_zone }}", type: MX }
+    - { record: "_dmarc", value: "v=DMARC1; p=reject; rua=mailto:root@{{ email_domain_zone }}; ruf=mailto:root@{{ email_domain_zone }}; rf=afrf; pct=100", type: TXT }

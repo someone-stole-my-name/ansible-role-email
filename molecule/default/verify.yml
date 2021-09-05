@@ -1,0 +1,10 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- hosts: all
+  gather_facts: false
+  tasks:
+    - service_facts:
+    - assert:
+        that: ansible_facts.services[item].state == 'running'
+      loop: [ 'exim4', 'dovecot' ]

@@ -5,8 +5,16 @@
 - include: dkim.yml
 
 - include: "{{ email_domain_ns_provider }}.yml"
+  when: not email_ci
+
+- include: molecule-dns.yml
+  when: email_ci
 
 - include: certbot.yml
+  when: not email_ci
+
+- include: molecule-certbot.yml
+  when: email_ci
 
 - include: exim.yml
 

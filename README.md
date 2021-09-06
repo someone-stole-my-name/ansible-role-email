@@ -1,10 +1,8 @@
-email
-=========
+# email
 
-No bells and whistles email, plain Dovecot and Exim4 setup for Debian boxes.
+No bells and whistles email, plain Dovecot and Exim4 setup for __Debian__ boxes.
 
-Role Variables
---------------
+## Role Variables
 
 - `email_server_external_ip`
 - `email_users`: Dictionary with `user` and `password` keys.
@@ -12,13 +10,11 @@ Role Variables
 - `email_domain_ns_provider`: Only cloudflare is supported (Default: `cloudflare`)
 - `cloudflare`: Dictionary with `email` and `api_key` keys.
 
-Dependencies
-------------
+## Dependencies
 
 - `geerlingguy.certbot`
 
-Example Playbook
-----------------
+## Example Playbook
 
     - hosts: foo
       become: yes
@@ -35,8 +31,15 @@ Example Playbook
               email: foo@bar.com
               api_key: bar
 
-SMTP/IMAP connection details
-----------------------------
+## [Compatibility](#compatibility)
+
+This role is tested on these container images:
+
+|container|tags|
+|---------|----|
+|jrei/systemd-debian|10|
+
+## SMTP/IMAP connection details
 
 - email: `foo@foo.bar`
 - server: `smtp.foo.bar`/`imap.foo.bar`
@@ -44,7 +47,6 @@ SMTP/IMAP connection details
 - password: `bar`
 - `STARTTLS`
 
-License
--------
+## License
 
 BSD-3-Clause

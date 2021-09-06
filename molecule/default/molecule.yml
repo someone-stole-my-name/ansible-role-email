@@ -6,7 +6,7 @@ driver:
 platforms:
   - name: mail
     image: jrei/systemd-debian:10
-    pre_build_image: true
+    command: /sbin/init
     registry:
       url: docker.io
     networks:
@@ -14,6 +14,7 @@ platforms:
     tmpfs:
       - /run
       - /tmp
+    privileged: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
 provisioner:

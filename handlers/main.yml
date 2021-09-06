@@ -11,12 +11,3 @@
   systemd:
     name: dovecot
     state: restarted
-
-- name: start services
-  systemd:
-    name: exim4
-    state: restarted
-    enabled: yes
-  loop:
-    - exim4
-    - dovecot

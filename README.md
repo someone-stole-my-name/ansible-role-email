@@ -37,7 +37,7 @@ This role is tested on these container images:
 
 |container|tags|
 |---------|----|
-|jrei/systemd-debian|10|
+|[jrei/systemd-debian](https://hub.docker.com/r/jrei/systemd-debian)|10|
 
 ## SMTP/IMAP connection details
 

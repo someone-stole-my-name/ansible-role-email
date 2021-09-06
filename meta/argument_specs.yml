@@ -1,37 +1,57 @@
 ---
 argument_specs:
   main:
+    short_description: Install and configure Dovecot and Exim4
+    description: |
+      This entrypoint will run all required tasks to:
+        - Install and configure Dovecot and Exim4
+        - Generate required certificates for your domain
+        - Setup required records on your DNS zone
+        - Create specified users on your system
     options:
       email_domain_zone:
+        description: "Your domain zone (eg: foo.com)."
         type: "str"
         required: yes
-      email_domain_ns_provider:
+      email_domain_ns_provider: 
+        description: "Provider that manages your zone, it is used to create DNS records."
         type: "str"
         choices: [ 'cloudflare' ]
       email_users:
+        description: List of users to create.
         type: "list"
         options:
           name:
+            description: "Username (eg: sara)."
             type: "str"
             required: yes
           password:
+            description: "Password."
             type: "str"
             required: yes
   cloudflare:
+    short_description: Create DNS records on Cloudflare
+    description: |
+      This entrypoint will create all the required records on Cloudflare.
     options:
       email_dkim_certificate:
+        description: Certificate string used for DKIM.
         type: "str"
         required: yes
       email_server_external_ip:
+        description: "Mail server external IP address."
         type: "str"
         required: yes
       cloudflare:
+        description: "Cloudflare credentials."
         type: "dict"
         required: yes
         options:
           email:
+            description: "Cloudflare email."
             type: "str"
             required: yes
           api_key:
+            description: "Cloudflare api-key."
             type: "str"
             required: yes

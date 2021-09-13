@@ -6,9 +6,13 @@ No bells and whistles email, plain Dovecot and Exim4 setup for __Debian__ boxes.
 
 - `email_server_external_ip`
 - `email_users`: Dictionary with `user` and `password` keys.
-- `email_domain_zone`: Your domain (eg: foo.com)
-- `email_domain_ns_provider`: Only cloudflare is supported (Default: `cloudflare`)
-- `cloudflare`: Dictionary with `email` and `api_key` keys.
+- `email_domain_zone`: Your domain (eg: `foo.com`).
+- `email_domain_ns_provider`: Only Cloudflare is supported (Default: `cloudflare`).
+- `email_certificates_path`: Dictionary with `certificate` and `key` keys. When both keys have a value, __LetsEncrypt certificates are not generated__. Your certificate should be a full chain and must be valid for the following subdomains:
+  - `mail`
+  - `smtp`
+  - `imap`
+- `cloudflare`: Dictionary with `email` and `api_key` keys, only required when `email_domain_ns_provider == cloudflare`.
 
 ## Dependencies
 

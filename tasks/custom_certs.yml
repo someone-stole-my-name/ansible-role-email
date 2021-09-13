@@ -1,0 +1,34 @@
+---
+
+- name: Create fake certbot directories
+  file:
+    path: "{{ item }}"
+    group: mailers
+    owner: root
+    mode: g+x
+    state: directory
+  loop:
+    - /etc/letsencrypt/archive
+    - /etc/letsencrypt/live
+    - /etc/letsencrypt/live/mail.{{ email_domain_zone }}
+    - /etc/letsencrypt/archive/mail.{{ email_domain_zone }}
+
+- name: Copy custom certificates to fake directories
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: mailers
+    mode: g+r
+  loop:
+    - { src: "{{ email_certificates_path.certificate }}", dest: "/etc/letsencrypt/archive/mail.{{ email_domain_zone }}/fullchain1.pem" }
+    - { src: "{{ email_certificates_path.key }}", dest: "/etc/letsencrypt/archive/mail.{{ email_domain_zone }}/privkey1.pem" }
+
+- name: Setup fake certbot symlinks
+  file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+  loop:
+    - { dest: "/etc/letsencrypt/live/mail.{{ email_domain_zone }}/fullchain.pem", src: "../../archive/mail.{{ email_domain_zone }}/fullchain1.pem" }
+    - { dest: "/etc/letsencrypt/live/mail.{{ email_domain_zone }}/privkey.pem", src: "../../archive/mail.{{ email_domain_zone }}/privkey1.pem" }

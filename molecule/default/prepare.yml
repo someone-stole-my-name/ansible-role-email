@@ -1,4 +1,4 @@
-- name: Prepare
+- name: Install Python
   hosts: all
   gather_facts: no
   tasks:

@@ -5,18 +5,31 @@ argument_specs:
     description: |
       This entrypoint will run all required tasks to:
         - Install and configure Dovecot and Exim4
-        - Generate required certificates for your domain
+        - Generate required certificates for your domain using LetsEncrypt or use your own certificates
         - Setup required records on your DNS zone
-        - Create specified users on your system
+        - Create the specified email users on your system
     options:
       email_domain_zone:
         description: "Your domain zone (eg: foo.com)."
         type: "str"
         required: yes
-      email_domain_ns_provider: 
+      email_domain_ns_provider:
         description: "Provider that manages your zone, it is used to create DNS records."
         type: "str"
         choices: [ 'cloudflare' ]
+        default: cloudflare
+      email_certificates_path:
+        description: When both `certificate` and `key` keys have a value LetsEncrypt certificates are not generated.
+        type: "dict"
+        options:
+          certificate:
+            description: "Path to the certificate."
+            type: "str"
+            default: ''
+          key:
+            description: "Path to the key."
+            type: "str"
+            default: ''
       email_users:
         description: List of users to create.
         type: "list"

@@ -36,3 +36,15 @@
     - path: /etc/dovecot/conf.d/10-mail.conf
       regexp: "^mail_location ="
       line: "mail_location = maildir:~/Maildir"
+
+    - path: /etc/dovecot/conf.d/10-mail.conf
+      regexp: "#mail_plugins ="
+      line: "mail_plugins = $mail_plugins quota"
+
+    - path: /etc/dovecot/conf.d/20-imap.conf
+      regexp: "#mail_plugins ="
+      line: "mail_plugins = $mail_plugins imap_quota"
+
+    - path: /etc/dovecot/conf.d/90-quota.conf
+      regexp: "#quota = maildir:User quota"
+      line: "quota = maildir:User quota"

@@ -1,9 +1,30 @@
 ---
 
-- hosts: all
+- name: Basic
+  hosts: all
   gather_facts: false
   tasks:
     - service_facts:
-    - assert:
+
+    - name: Service is running
+      assert:
         that: ansible_facts.services[item].state == 'running'
       loop: [ 'exim4', 'dovecot' ]
+
+- name: Quota
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Gather quota info
+      shell: "doveadm quota get -u {{ item }}"
+      changed_when: false
+      register: _dovecot_quota
+      loop:
+        - molecule_no_quota
+        - molecule_quota
+
+    - name: Quota matches
+      assert:
+        that:
+          - _dovecot_quota.results[0].stdout_lines[1] | regex_replace(' +', ' ') == 'User quota STORAGE 0 - 0'
+          - _dovecot_quota.results[1].stdout_lines[1] | regex_replace(' +', ' ') == 'User quota STORAGE 0 1024 0'

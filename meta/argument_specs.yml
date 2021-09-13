@@ -43,6 +43,10 @@ argument_specs:
             description: "Password."
             type: "str"
             required: yes
+          quota:
+            description: "Storage quota in MB. When omitted there is no limit!"
+            type: "int"
+            required: no
   cloudflare:
     short_description: Create DNS records on Cloudflare
     description: |

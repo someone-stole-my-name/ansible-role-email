@@ -32,14 +32,14 @@
 - name: Hash password (exim)
   no_log: yes
   shell: mkpasswd {{ item.password }}
-  when: _user_exists_exim.rc == 1
+  when: _user_exists_exim.rc != 0
   register: _password_exim
   tags: [ 'users' ]
 
 - name: Hash password (dovecot)
   no_log: yes
   shell: doveadm pw -p {{ item.password }}
-  when: _user_exists_dovecot.rc == 1
+  when: _user_exists_dovecot.rc != 0
   register: _password_dovecot
   tags: [ 'users' ]
 
@@ -48,13 +48,22 @@
     path: /etc/exim4/passwd
     create: yes
     line: "{{ item.name }}:{{ _password_exim.stdout }}"
-  when: _user_exists_exim.rc == 1
+  when: _user_exists_exim.rc != 0
   tags: [ 'users' ]
 
 - name: Add user (dovecot)
   lineinfile:
     path: /etc/dovecot/users
     create: yes
-    line: "{{ item.name }}:{{ _password_dovecot.stdout }}:{{ _user.uid }}:{{ _user.group }}::/home/{{ item.name }}:/bin/bash:userdb_mail=maildir:/home/{{ item.name }}/Maildir"
-  when: _user_exists_dovecot.rc == 1
+    line: "\
+      {{ item.name }}:\
+      {{ _password_dovecot.stdout }}:\
+      {{ _user.uid }}:\
+      {{ _user.group }}::\
+      /home/{{ item.name }}:\
+      /bin/bash:\
+      userdb_mail=maildir:/home/{{ item.name }}/Maildir \
+      {% if item.quota is defined %}userdb_quota_rule=*:bytes={{ item.quota }}M{% endif %}\
+      "
+  when: _user_exists_dovecot.rc != 0
   tags: [ 'users' ]

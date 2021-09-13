@@ -1,3 +1,5 @@
+---
+
 - name: Install Python
   hosts: all
   gather_facts: no

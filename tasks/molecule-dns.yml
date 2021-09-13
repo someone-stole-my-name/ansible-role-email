@@ -1,3 +1,5 @@
+---
+
 - name: Mail records
   debug: var=item
   loop:

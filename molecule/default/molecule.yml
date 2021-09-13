@@ -1,0 +1,27 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: mail
+    image: jrei/systemd-debian:10
+    command: /sbin/init
+    registry:
+      url: docker.io
+    networks:
+      - name: molecule.local
+    tmpfs:
+      - /run
+      - /tmp
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+provisioner:
+  name: ansible
+  inventory:
+    host_vars:
+      mail:
+        ansible_python_interpreter: /usr/bin/python2.7
+verifier:
+  name: ansible

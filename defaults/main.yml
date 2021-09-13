@@ -1,3 +1,9 @@
 ---
+email_ci: false
+
 email_domain_ns_provider: cloudflare
 email_users: []
+
+email_certificates_path:
+  certificate: ''
+  key: ''

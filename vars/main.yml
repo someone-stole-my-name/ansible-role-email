@@ -9,7 +9,7 @@ certbot_certs:
       - imap.{{ email_domain_zone }}
 
 mail_base_pkgs:
-  - python-openssl
+  - python-cryptography
   - exim4
   - whois
   - dovecot-imapd

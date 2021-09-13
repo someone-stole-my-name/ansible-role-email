@@ -1,4 +1,6 @@
 galaxy_info:
+  role_name: email
+  namespace: someone_stole_my_name
   author: Christian Segundo
   license: BSD-3-Clause
   min_ansible_version: 2.11

@@ -23,20 +23,22 @@ No bells and whistles email, plain Dovecot and Exim4 setup for __Debian__ boxes.
 
 ## Example Playbook
 
-    - hosts: foo
-      become: yes
-      gather_facts: yes
-      roles:
-        - name: email
-          vars:
-            email_server_external_ip: 192.168.1.1
-            email_users:
-              - name: foo
-                password: bar
-            email_domain_zone: foo.bar
-            cloudflare:
-              email: foo@bar.com
-              api_key: bar
+```yaml
+- hosts: foo
+  become: yes
+  gather_facts: yes
+  roles:
+    - name: email
+      vars:
+        email_server_external_ip: 192.168.1.1
+        email_users:
+          - name: foo
+            password: bar
+        email_domain_zone: foo.bar
+        cloudflare:
+          email: foo@bar.com
+          api_key: bar
+```
 
 ## [Compatibility](#compatibility)
 

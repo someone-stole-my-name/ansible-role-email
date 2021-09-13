@@ -1,5 +1,7 @@
 # email
 
+[![Molecule](https://github.com/someone-stole-my-name/ansible-role-email/actions/workflows/molecule.yml/badge.svg?branch=main)](https://github.com/someone-stole-my-name/ansible-role-email/actions/workflows/molecule.yml)
+
 No bells and whistles email, plain Dovecot and Exim4 setup for __Debian__ boxes.
 
 ## Role Variables

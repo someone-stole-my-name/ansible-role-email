@@ -15,6 +15,9 @@ jobs:
           - default
     steps:
       - uses: actions/checkout@v2
+        with:
+          path: "${{ github.repository }}"
+          fetch-depth: 0
       - uses: gofrolist/molecule-action@v2
         with:
           molecule_command: test

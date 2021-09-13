@@ -12,4 +12,4 @@
       certificate: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/molecule/files/mail.{{ email_domain_zone }}.crt"
       key: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/molecule/files/mail.{{ email_domain_zone }}.crt"
   roles:
-    - email
+    - someone_stole_my_name.email

@@ -1,6 +1,7 @@
 # email
 
-[![Molecule](https://github.com/someone-stole-my-name/ansible-role-email/actions/workflows/molecule.yml/badge.svg?branch=main)](https://github.com/someone-stole-my-name/ansible-role-email/actions/workflows/molecule.yml)
+[![Molecule](https://github.com/someone-stole-my-name/ansible-role-email/actions/workflows/molecule.yml/badge.svg?branch=main)](https://github.com/someone-stole-my-name/ansible-role-email/actions/workflows/molecule.yml) [![License](https://badgen.net/github/license/someone-stole-my-name/ansible-role-email)](https://github.com/someone-stole-my-name/ansible-role-email/LICENSE)
+
 
 No bells and whistles email, plain Dovecot and Exim4 setup for __Debian__ boxes.
 

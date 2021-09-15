@@ -13,3 +13,6 @@ mail_base_pkgs:
   - exim4
   - whois
   - dovecot-imapd
+  - dovecot-sieve
+  - dovecot-managesieved
+  - dovecot-lmtpd

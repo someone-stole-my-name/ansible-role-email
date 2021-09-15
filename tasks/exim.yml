@@ -1,6 +1,6 @@
 ---
 
-- name: Enable exim authentication
+- name: Enable Exim authentication
   blockinfile:
     path: /etc/exim4/exim4.conf.template
     insertbefore: "# login_server:"
@@ -20,7 +20,24 @@
     - update exim configuration
     - restart exim
 
-- name: Copy custom exim template
+- name: Enable dovecot_lmtp transport
+  blockinfile:
+    path: /etc/exim4/exim4.conf.template
+    insertbefore: "### transport/30_exim4-config_maildir_home"
+    marker_begin: BEGIN DOVECOT LMTP TRANSPORT
+    marker_end: END DOVECOT LMTP TRANSPORT
+    block: |
+      # https://wiki.dovecot.org/LMTP/Exim
+      dovecot_lmtp:
+        driver = lmtp
+        socket = /var/run/dovecot/lmtp
+        batch_max = 200
+        rcpt_include_affixes
+  notify:
+    - update exim configuration
+    - restart exim
+
+- name: Copy custom Exim template
   blockinfile:
     path: /etc/exim4/exim4.conf.template
     insertafter: MAIN CONFIGURATION SETTINGS
@@ -63,7 +80,7 @@
         dc_use_split_config='false'
         dc_hide_mailname=''
         dc_mailname_in_oh='true'
-        dc_localdelivery='maildir_home'
+        dc_localdelivery='dovecot_lmtp'
   notify:
     - update exim configuration
     - restart exim

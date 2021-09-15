@@ -4,4 +4,4 @@
   hosts: all
   gather_facts: no
   tasks:
-    - raw: apt update && apt -y install python
+    - raw: apt update && apt -y install python vim net-tools

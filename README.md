@@ -5,7 +5,15 @@
 
 No bells and whistles email, plain Dovecot and Exim4 setup for __Debian__ boxes.
 
-## Role Variables
+- [email](#email)
+  - [Role Variables](#role-variables)
+  - [Dependencies](#dependencies)
+  - [Example Playbook](#example-playbook)
+  - [Compatibility](#compatibility)
+  - [SMTP/IMAP connection details](#smtpimap-connection-details)
+  - [License](#license)
+
+## [Role Variables](#role-variables)
 
 - `email_server_external_ip`
 - `email_users`: Dictionary with `user` and `password` and `quota` keys. When quota is not present, there are no limits.
@@ -17,11 +25,11 @@ No bells and whistles email, plain Dovecot and Exim4 setup for __Debian__ boxes.
   - `imap`
 - `cloudflare`: Dictionary with `email` and `api_key` keys, only required when `email_domain_ns_provider == cloudflare`.
 
-## Dependencies
+## [Dependencies](#dependencies)
 
 - `geerlingguy.certbot`
 
-## Example Playbook
+## [Example Playbook](#example-playbook)
 
 ```yaml
 - hosts: foo
@@ -34,6 +42,9 @@ No bells and whistles email, plain Dovecot and Exim4 setup for __Debian__ boxes.
         email_users:
           - name: foo
             password: bar
+          - name: bar
+            password: foo
+            quota: 256
         email_domain_zone: foo.bar
         cloudflare:
           email: foo@bar.com
@@ -48,7 +59,7 @@ This role is tested on these container images:
 |---------|----|
 |[jrei/systemd-debian](https://hub.docker.com/r/jrei/systemd-debian)|10|
 
-## SMTP/IMAP connection details
+## [SMTP/IMAP connection details](smtp-imap-connection-details)
 
 - email: `foo@foo.bar`
 - server: `smtp.foo.bar`/`imap.foo.bar`
@@ -56,6 +67,6 @@ This role is tested on these container images:
 - password: `bar`
 - `STARTTLS`
 
-## License
+## [License](#license)
 
 BSD-3-Clause

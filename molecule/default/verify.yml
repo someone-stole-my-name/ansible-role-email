@@ -11,6 +11,37 @@
         that: ansible_facts.services[item].state == 'running'
       loop: [ 'exim4', 'dovecot' ]
 
+- name: Routing
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Local routing
+      shell: exim -bt {{ item }}
+      changed_when: false
+      register: _exim_local_routing
+      loop:
+        - molecule_quota
+        - molecule_no_quota
+
+    - name: Remote routing
+      shell: exim -bt {{ item }}
+      changed_when: false
+      register: _exim_remote_routing
+      loop:
+        - molecule@github.com
+
+    - name: Check local router and transport
+      assert:
+        that:
+          - item.stdout_lines[1] | regex_replace(' +', '') == 'router=local_user,transport=dovecot_lmtp'
+      loop: "{{ _exim_local_routing.results }}"
+
+    - name: Check remote router and transport
+      assert:
+        that:
+          - item.stdout_lines[1] | regex_replace(' +', '') == 'router=dnslookup,transport=remote_smtp'
+      loop: "{{ _exim_remote_routing.results }}"
+
 - name: Quota
   hosts: all
   gather_facts: false
@@ -28,3 +59,44 @@
         that:
           - _dovecot_quota.results[0].stdout_lines[1] | regex_replace(' +', ' ') == 'User quota STORAGE 0 - 0'
           - _dovecot_quota.results[1].stdout_lines[1] | regex_replace(' +', ' ') == 'User quota STORAGE 0 1024 0'
+
+- name: LMTP delivery
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Create sample local email
+      copy:
+        dest: /tmp/sample_email
+        content: |
+          From: root@molecule.local
+          To: molecule_quota@molecule.local
+          Subject: sample
+
+          sample
+
+    - name: Send local email
+      shell: cat /tmp/sample_email | exim -v molecule_quota@molecule.local
+      register: _exim_local_delivery
+
+    - name: Successful delivery
+      assert:
+        that:
+          - _exim_local_delivery.stderr_lines[item.idx] == item.value
+      loop:
+        - { idx: 9, value: "  LMTP<< 220 mail Dovecot (Debian) ready." }
+        - { idx: 10, value: "  LMTP>> LHLO mail.molecule.local" }
+        - { idx: 11, value: "  LMTP<< 250-mail" }
+        - { idx: 12, value: "  LMTP<< 250-8BITMIME" }
+        - { idx: 13, value: "  LMTP<< 250-CHUNKING" }
+        - { idx: 14, value: "  LMTP<< 250-ENHANCEDSTATUSCODES" }
+        - { idx: 15, value: "  LMTP<< 250-PIPELINING" }
+        - { idx: 16, value: "  LMTP<< 250 VRFY" }
+        - { idx: 17, value: "  LMTP>> MAIL FROM:<root@molecule.local>" }
+        - { idx: 18, value: "  LMTP<< 250 2.1.0 OK" }
+        - { idx: 19, value: "  LMTP>> RCPT TO:<molecule_quota@molecule.local>" }
+        - { idx: 20, value: "  LMTP<< 250 2.1.5 OK" }
+        - { idx: 21, value: "  LMTP>> DATA" }
+        - { idx: 22, value: "  LMTP<< 354 OK" }
+        - { idx: 23, value: "  LMTP>> writing message and terminating \".\"" }
+        - { idx: 25, value: "  LMTP>> QUIT" }
+        - { idx: 26, value: "  LMTP<< 221 2.0.0 Bye" }

@@ -51,4 +51,4 @@
 
     - path: /etc/dovecot/conf.d/20-lmtp.conf
       regexp: "^protocol lmtp {"
-      line: " protocol lmtp {\n  auth_username_format = %n"
+      line: " protocol lmtp {\n  auth_username_format = %n\n  mail_plugins = $mail_plugins sieve"

@@ -32,6 +32,7 @@ No bells and whistles email, plain Dovecot and Exim4 setup for __Debian__ boxes.
 - 587 (SMTP) TCP
 - 993 (IMAP) TCP
 - 143 (IMAP) TCP
+- 4190 (Sieve) TCP
 
 ## [Dependencies](#dependencies)
 

@@ -52,3 +52,7 @@
     - path: /etc/dovecot/conf.d/20-lmtp.conf
       regexp: "^protocol lmtp {"
       line: " protocol lmtp {\n  auth_username_format = %n\n  mail_plugins = $mail_plugins sieve"
+
+    - path: /etc/dovecot/conf.d/15-lda.conf
+      regexp: "^#lda_mailbox_autocreate ="
+      line: "lda_mailbox_autocreate = yes"

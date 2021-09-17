@@ -7,6 +7,7 @@ No bells and whistles email, plain Dovecot and Exim4 setup for __Debian__ boxes.
 
 - [email](#email)
   - [Role Variables](#role-variables)
+  - [Requirements](#requirements)
   - [Dependencies](#dependencies)
   - [Example Playbook](#example-playbook)
   - [Compatibility](#compatibility)
@@ -24,6 +25,14 @@ No bells and whistles email, plain Dovecot and Exim4 setup for __Debian__ boxes.
   - `smtp`
   - `imap`
 - `cloudflare`: Dictionary with `email` and `api_key` keys, only required when `email_domain_ns_provider == cloudflare`.
+
+## [Requirements](#requirements)
+
+- 25 (SMTP) TCP
+- 587 (SMTP) TCP
+- 993 (IMAP) TCP
+- 143 (IMAP) TCP
+- 4190 (Sieve) TCP
 
 ## [Dependencies](#dependencies)
 

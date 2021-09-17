@@ -5,3 +5,17 @@
   gather_facts: no
   tasks:
     - raw: apt update && apt -y install python vim net-tools
+
+- name: Install autocompletion
+  hosts: all
+  gather_facts: no
+  tasks:
+    - apt:
+        name: bash-completion
+    
+    - blockinfile:
+        path: /etc/bash.bashrc
+        block: |
+          if [ -f /etc/bash_completion ]; then
+              . /etc/bash_completion
+          fi
